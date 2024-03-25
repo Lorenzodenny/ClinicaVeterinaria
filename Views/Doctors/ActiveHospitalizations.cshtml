@@ -1,0 +1,220 @@
+﻿@model List<ClinicaVeterinaria.Models.Hospitalization>
+
+<div class="container" style="width:50rem">
+    <div class="d-flex flex-column">
+        <div class="my-4">
+            <div class="d-flex justify-content-between border-bottom border-success pb-3">
+                <h2 class="text-success">Ricoveri Attivi</h2>
+                <div>
+                    <button class="btn btn-success" onclick="openContabilizzazioneModal()">Contabilizzazione</button>
+                </div>
+            </div>
+
+            <table class="text-center table table-bordered mt-3 border border-success BordiTabella">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome Animale</th>
+                        <th>Inizio Ricovero</th>
+                        <th>Prognosi</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var hospitalization in Model.Where(h => h.DataFineRicovero == null))
+                    {
+                        <tr>
+                            <td>@hospitalization.HospitalizationID</td>
+                            <td>@hospitalization.Beast.Nome</td>
+                            <td>@hospitalization.DataInizioRicovero.ToString("yyyy-MM-dd")</td>
+                            <td>@hospitalization.Prognosi</td>
+                             
+                            <td >
+                                <button class="btn btn-success mx-1 my-1" onclick="openModal('@hospitalization.HospitalizationID')">Dettaglio Ricovero</button>
+                                <button class="btn btn-success mx-1 my-1" onclick="window.location.href='@Url.Action("Details", "Doctors", new { id = hospitalization.BeastID } )'">Dettaglio Bestia</button> @*TODO*@
+
+                            </td>
+       
+                       </tr>
+        }
+                    </tbody>
+                    </table>
+                </div>
+        <div>
+            <h2 class="text-success border-bottom border-success pb-3">Checkout Ricoveri</h2>
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Nome Animale</th>
+                        <th>Prognosi</th>
+                        <th>Giorni Totali</th>
+                        <th>Totale Pagamento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var hospitalization in Model.Where(h => h.DataFineRicovero != null))
+                    {
+                        var giorniTotali = (int)(hospitalization.DataFineRicovero.Value.Date - hospitalization.DataInizioRicovero.Date).TotalDays;
+                        <tr>
+                            <td>@hospitalization.Beast.Nome</td>
+                            <td>@hospitalization.Prognosi</td>
+                            <td>@giorniTotali</td>
+                            <td>@(hospitalization.CostoGiornalieroRicovero * giorniTotali) €</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Checkout -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title text-success" id="exampleModalLabel">Dettagli Ricovero</h2>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nome Animale:</strong> <span id="animalName"></span></p>
+                <p><strong>Dottore Curante:</strong> <span id="doctorName"></span></p>
+                <p><strong>Prognosi:</strong> <span id="prognosis"></span></p>
+                <p><strong>Costo Giornaliero:</strong> <span id="dailyCost"></span> €</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="checkout()">Check-out</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fine modal checkout -->
+<!--Modal Contabilizzazione-->
+
+<div class="modal fade" id="contabilizzazioneModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title text-success" id="exampleModalLabel">Dettagli Ricoveri Attivi</h2>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" onclick="closeContabilizzazioneModal()">
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nome Animale</th>
+                            <th>Inizio Ricovero</th>
+                            <th>Fine Ricovero</th>
+                            <th>Giorni di Ricovero</th>
+                            <th>Costo Giornaliero</th>
+                            <th>Totale Rimborso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var hospitalization in Model)
+                        {
+                            if (!hospitalization.Beast.Microchip)
+                            {
+                                <tr>
+                                    <td>@hospitalization.Beast.Nome</td>
+                                    <td>@hospitalization.DataInizioRicovero.ToString("yyyy-MM-dd")</td>
+                                    <td>@(hospitalization.DataFineRicovero.HasValue ? hospitalization.DataFineRicovero.Value.ToString("yyyy-MM-dd") : "N/A")</td>
+                                    <td>
+                                        @if (hospitalization.DataFineRicovero.HasValue)
+                                        {
+                                            var giorniTotali = (int)(hospitalization.DataFineRicovero.Value.Date - hospitalization.DataInizioRicovero.Date).TotalDays;
+                                            @giorniTotali
+                                        }
+                                        else
+                                        {
+                                            @:N/A
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (hospitalization.DataFineRicovero.HasValue)
+                                        {
+                                            @Html.DisplayFor(modelItem => hospitalization.CostoGiornalieroRicovero)
+                                        }
+                                        else
+                                        {
+                                            @:N/A
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (hospitalization.DataFineRicovero.HasValue)
+                                        {
+                                            var giorniTotali = (int)(hospitalization.DataFineRicovero.Value.Date - hospitalization.DataInizioRicovero.Date).TotalDays;
+                                            @((hospitalization.CostoGiornalieroRicovero * giorniTotali) +" €");
+                                        }
+                                        else
+                                        {
+                                            @:N/A
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fine Modal Contabilizzazione-->
+<script>
+    var currentHospitalizationID;
+
+    function openModal(hospitalizationID) {
+        var modal = $('#myModal');
+        modal.modal('show');
+        currentHospitalizationID = hospitalizationID;
+
+        $.ajax({
+            url: '@Url.Action("GetHospitalizationDetails", "Doctors")',
+            type: 'GET',
+            data: { id: hospitalizationID },
+            success: function (data) {
+                $('#animalName').text(data.animalName);
+                $('#doctorName').text(data.doctorName);
+                $('#prognosis').text(data.prognosis);
+                $('#dailyCost').text(data.dailyCost);
+            },
+            error: function () {
+                alert('Si è verificato un errore durante il recupero dei dettagli del ricovero.');
+            }
+        });
+    }
+
+    function closeModal() {
+        var modal = $('#myModal');
+        modal.modal('hide');
+    }
+
+    function checkout() {
+
+        $.ajax({
+            url: '@Url.Action("CheckoutHospitalization", "Doctors")',
+            type: 'POST',
+            data: { id: currentHospitalizationID },
+            success: function (data) {
+                closeModal();
+                location.reload();
+            },
+            error: function () {
+                alert('Si è verificato un errore durante l\'esecuzione del check-out.');
+            }
+        });
+    }
+
+    function openContabilizzazioneModal() {
+        var modal = $('#contabilizzazioneModal');
+        modal.modal('show');
+    }
+
+    function closeContabilizzazioneModal() {
+        var modal = $('#contabilizzazioneModal');
+        modal.modal('hide');
+    }
+</script>

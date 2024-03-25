@@ -1,0 +1,61 @@
+@model IEnumerable<ClinicaVeterinaria.Models.Beast>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container" style="width:35rem">
+    <h2 class="text-success border-bottom border-success pb-3">Lista Bestie</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <form method="get" action="@Url.Action("Index", "Doctors")" style="width: 60%;">
+            <div class="input-group mt-2">
+                <input type="text" class="form-control border-success" name="search" placeholder="Cerca per nome o microchip" value="@ViewBag.SearchString" />
+                <button type="submit" class="btn btn-success">Cerca</button>
+            </div>
+        </form>
+        <a href="@Url.Action("AddBeast", "Doctors")" class="btn btn-success mt-2">Aggiungi</a>
+    </div>
+
+    @if (ViewBag.NoResults)
+    {
+        <p style="font-size:3em">Nessun risultato trovato.</p>
+    }
+    else
+    {
+        foreach (var beast in Model)
+        {
+            <div class="card mb-3 p-0 border-success">
+                <div class="d-flex">
+                    <div style="background-image: url('@beast.Foto'); background-size: cover; background-position: center; width: 25%; border-top-left-radius:0.3rem" class=" border border-success"></div>
+                    <div class="d-flex card-body justify-content-between">
+                        <div class="d-flex ">
+                            <div>
+                                <div>
+                                    <p class="card-title fw-bold m-0">Nome bestia:</p>
+                                    <p>@beast.Nome</p>
+                                </div>
+                                <div>
+                                    <p class="card-text fw-bold m-0">Codice microchip:</p>
+                                    <p>@beast.MicrochipCodice</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div>
+                                <div>
+                                    <p class="card-title fw-bold m-0">Nome Proprietario:</p>
+                                    <p>@beast.Proprietario</p>
+                                </div>
+                                <div>
+                                    <p class="card-text fw-bold m-0">Codice Fiscale:</p>
+                                    <p>@beast.CodiceFiscale</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Action("Details", "Doctors", new { id = beast.BeastID })" class="btn btn-success BottoneCard">Cartella clinica</a>
+            </div>
+        }
+    }
+    </div>

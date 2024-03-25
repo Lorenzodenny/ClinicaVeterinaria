@@ -1,0 +1,40 @@
+﻿@model ClinicaVeterinaria.Models.CheckoutSummaryViewModel
+
+<h2 class="pb-3" style="color:darkcyan; border-bottom:1px solid">Riepilogo prodotti comprati</h2>
+<h3 class="mb-2" style="color:darkcyan;">Informazioni sull'animale e Proprietario</h3>
+<p class="fs-5">Nome Animale: @Model.Animale.Nome</p>
+<p class="fs-5">Nome Proprietario: @Model.Animale.Proprietario</p>
+<p class="fs-5">Codice Fiscale: @Model.Animale.CodiceFiscale</p>
+<p class="fs-5">Numero Ricetta: @Model.NumeroRicetta</p>
+<p class="fs-5">Nome Farmacista: @Model.NomeFarmacista</p>
+
+<h3 class="pb-3" style="color:darkcyan; border-bottom:1px solid">Prodotti Venduti</h3>
+<div class="d-flex justify-content-between mt-4">
+    <h4>Totale Guadagnato: @String.Format("{0:C}", Model.PrezzoTotale)</h4>
+    <button id="printButton" class="btn text-white d-print-none" style="background-color:darkcyan">Stampa PDF</button>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Prodotto</th>
+            <th>Venduto il</th>
+            <th>Prezzo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vendita in Model.Vendite)
+        {
+            <tr>
+                <td>@vendita.Product.Nome</td>
+                <td>@vendita.DataVendita.ToString("dd/MM/yyyy")</td>
+                <td>@String.Format("{0:C}", vendita.Prezzo)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    document.getElementById('printButton').addEventListener('click', function () {
+        window.print();
+    });
+</script>

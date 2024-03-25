@@ -1,0 +1,15 @@
+﻿@model IEnumerable<ClinicaVeterinaria.Models.Product>
+
+@if (!Model.Any())
+{
+    <div class="mt-2">Nessuna medicina trovata per questa data.</div>
+}
+else
+{
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li class="fs-5 mt-3">@item.Nome</li>
+        }
+    </ul>
+}

@@ -1,0 +1,195 @@
+﻿@model ClinicaVeterinaria.Models.Beast
+
+@{
+    ViewBag.Title = "Add Beast";
+}
+
+@*Inizio Codice Pes*@
+<h2 class="border-bottom border-success pb-3 text-success">Aggiungi Bestia</h2>
+<h3 class="text-success">Dettagli Bestia</h3>
+<div id="error-banner" class="alert alert-danger mt-3" style="display:none;">
+    Per favore, compila tutti i campi obbligatori.
+</div>
+
+@if (TempData["MessageDate"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["MessageDate"]
+                </div>
+            }
+
+
+
+@using (Html.BeginForm("AddBeast", "Doctors", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="me-4 col-3">
+            <div class="mt-4">
+                <div class="form-group">
+                    <label for="Nome" class="control-label">Data Nascita</label>
+                    @Html.TextBoxFor(model => model.DataNascita, new { @class = "form-control border-success", type = "date" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Nome" class="control-label ">Data Di Nascita Presunta</label>
+                    @Html.CheckBoxFor(model => model.Presunta)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Foto" class="control-label">Foto</label>
+                <input type="file" name="Foto" class="form-control border-success" />
+            </div>
+
+            <div class="form-group my-4">
+                @Html.LabelFor(model => model.Nome)
+                @Html.TextBoxFor(model => model.Nome, new { @class = "form-control border-success" })
+            </div>
+
+            <div class="form-group my-4">
+                @Html.LabelFor(model => model.Tipologia)
+                @Html.TextBoxFor(model => model.Tipologia, new { @class = "form-control border-success" })
+            </div>
+
+            <div class="form-group my-4">
+                <label for="Nome" class="control-label">Colore Mantello</label>
+                @Html.TextBoxFor(model => model.ColoreMantello, new { @class = "form-control border-success" })
+            </div>
+
+            <div class="my-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Proprietario)
+                    @Html.TextBoxFor(model => model.Proprietario, new { @class = "form-control border-success" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Nome" class="control-label">Randagio</label>
+                    @Html.CheckBoxFor(model => model.Smarrito, new { @onclick = "ControlloCheckBox()" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="form-group my-4">
+                <label for="Nome" class="control-label">Codice Fiscale</label>
+                @Html.TextBoxFor(model => model.CodiceFiscale, new { @class = "form-control border-success" })
+            </div>
+
+            <div class="form-group my-4">
+                <label for="Nome" class="control-label">Email Proprietario</label>
+                @Html.TextBoxFor(model => model.EmailProprietario, new { @class = "form-control border-success" })
+            </div>
+
+            <div class="form-group my-4">
+                <label for="Nome" class="control-label">Cellulare Proprietario</label>
+                @Html.TextBoxFor(model => model.CellulareProprietario, new { @class = "form-control border-success", @id = "CellulareProprietario" })
+            </div>
+
+            <div class="form-group my-2">
+                <label for="Nome" class="control-label">Patologie Pregresse</label>
+                @Html.TextBoxFor(model => model.PatologiePregresse, new { @class = "form-control border-success" })
+            </div>
+            
+            <div class="mt-4">
+                <div class="form-group">
+                    <label for="Nome" class="control-label">Codice Microchip</label>
+                    @Html.TextBoxFor(model => model.MicrochipCodice, new { @class = "form-control border-success", @type = "number", @pattern = "[0-9]*", @min = "0", @disabled = "disabled" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Nome" class="control-label">Microchip</label>
+                    @Html.CheckBoxFor(model => model.Microchip, new { @onclick = "toggleMicrochipCodice()" })
+                </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label for="Nome" class="control-label">Data Registrazione</label>
+                @Html.TextBoxFor(model => model.DataRegistrazione, new { @class = "form-control border-success", type = "date" })
+            </div>
+        </div>
+    </div>
+
+
+    <button type="button" id="submitButton" class="btn btn-success" onclick="validateForm()">Aggiungi La Bestia</button>
+}
+
+<script>
+    function validateForm() {
+        var nome = document.getElementById("Nome").value;
+        var dataNascita = document.getElementById("DataNascita").value;
+
+        if (nome.trim() === "" || dataNascita.trim() === "") {
+            document.getElementById("error-banner").innerHTML = "Per favore, compila tutti i campi obbligatori.";
+            document.getElementById("error-banner").style.display = "block";
+            return false;
+        } else {
+            document.getElementById("error-banner").style.display = "none";
+            document.getElementById("submitButton").type = "submit";
+        }
+    }
+    //gabriele
+    function toggleMicrochipCodice() {
+        var microchipCheckbox = document.getElementById("Microchip");
+        var microchipCodiceTextbox = document.getElementById("MicrochipCodice");
+        if (microchipCheckbox.checked) {
+            microchipCodiceTextbox.disabled = false;
+        } else {
+            microchipCodiceTextbox.disabled = true;
+            microchipCodiceTextbox.value = "";
+        }
+    }
+    //gabriele
+
+    // Controllo checkbox "Randagio" codice MG
+
+    function ControlloCheckBox() {
+        var smarritoCheckbox = document.getElementById("Smarrito");
+        var proprietarioInpunt = document.getElementById("Proprietario");
+        var codiceFiscaleInput = document.getElementById("CodiceFiscale")
+        var emailProprietarioInpunt = document.getElementById("EmailProprietario");
+        var cellulareProprietarioInpunt = document.getElementById("CellulareProprietario");
+        var patologiePregresse = document.getElementById("PatologiePregresse");
+
+        if (smarritoCheckbox.checked) {
+            proprietarioInpunt.disabled = true;
+            proprietarioInpunt.value = "";
+            codiceFiscaleInput.disabled = true;
+            codiceFiscaleInput.value = "";
+            emailProprietarioInpunt.disabled = true;
+            emailProprietarioInpunt.value = "";
+            cellulareProprietarioInpunt.disabled = true;
+            cellulareProprietarioInpunt.value = "";
+            patologiePregresse.disabled = true;
+            patologiePregresse.value = "";
+        } else {
+            proprietarioInpunt.disabled = false;
+            codiceFiscaleInput.disabled = false;
+            emailProprietarioInpunt.disabled = false;
+            cellulareProprietarioInpunt.disabled = false;
+            patologiePregresse.disabled = false;
+        }
+    }
+
+           window.onload = ControlloCheckBox;
+    // fine controllo "Randagio" codice MG
+    //Inizio codice metha
+
+    // Funzione per consentire solo l'inserimento di numeri
+    document.getElementById("CellulareProprietario").onkeypress = function (event) {
+        // Ottenere il tasto premuto
+        var charCode = (event.which) ? event.which : event.keyCode;
+
+        // Verificare se il tasto premuto è un numero
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            // Se non è un numero, impedire l'input
+            event.preventDefault();
+        }
+    };
+    //fine codice metha
+
+
+</script>
+
+@*Fine Codice Pes*@

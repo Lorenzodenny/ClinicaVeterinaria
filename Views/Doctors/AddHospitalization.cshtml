@@ -1,0 +1,62 @@
+﻿@model ClinicaVeterinaria.Models.Hospitalization
+
+
+@if (TempData["MessageOsp"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["MessageOsp"]
+    </div>
+}
+
+@using (Html.BeginForm("AddHospitalization", "Doctors", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <h2 class="text-success border-bottom border-success pb-3">Aggiungi Ricovero</h2>
+    <h3 class="text-success">Dettagli Ricovero</h3>
+    <div class="d-flex">
+        <div class="me-3 mt-2">
+            <div class="form-group ">
+                @Html.LabelFor(model => model.DataInizioRicovero, "Data Inizio Ricovero", htmlAttributes: new { @class = "control-label" })
+                <div class="">
+                    @Html.TextBoxFor(model => model.DataInizioRicovero, "{0:yyyy-MM-dd}", new { @class = "form-control border-success", @type = "date" })
+                    @Html.ValidationMessageFor(model => model.DataInizioRicovero, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                @Html.LabelFor(model => model.Prognosi, "Prognosi", htmlAttributes: new { @class = "control-label" })
+                <div class="">
+                    @Html.EditorFor(model => model.Prognosi, new { htmlAttributes = new { @class = "form-control border-success" } })
+                    @Html.ValidationMessageFor(model => model.Prognosi, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @Html.Hidden("DoctorID", (int)Session["DoctorID"])
+            <div class="mt-3">
+                @Html.Label("NomeDottore", "Dottore", new { @class = "form-label" })
+                @Html.TextBox("NomeDottore", Session["UserM"] as string, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+
+            @Html.Hidden("BeastID", (int)ViewBag.Bestia.BeastID)
+        <div class="mt-3">
+            @Html.Label("BeastID", "Animale", new { @class = "form-label" })
+            @Html.TextBox("Nome Bestia", ViewBag.Bestia.Nome as string, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+            <div class="form-group mt-3">
+                @Html.LabelFor(model => model.CostoGiornalieroRicovero, "Costo Giornaliero Ricovero", htmlAttributes: new { @class = "control-label" })
+                <div class="">
+                    @Html.TextBoxFor(model => model.CostoGiornalieroRicovero, "{0:n}", new { @class = "form-control border-success", @type = "number", @step = "1.00" })
+                    @Html.ValidationMessageFor(model => model.CostoGiornalieroRicovero, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group d-flex mt-4 align-items-center">
+        <div class="">
+            <button type="submit" class="btn btn-success p-2">Ricovera Bestia</button>
+        </div>
+        <div class="ms-3">
+            @Html.ActionLink("Torna Alle Bestie", "Index", null, new { @class = "btn btn-secondary p-2" })
+        </div>
+    </div>
+}

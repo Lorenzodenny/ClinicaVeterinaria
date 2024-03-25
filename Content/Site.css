@@ -1,0 +1,71 @@
+﻿/* Set padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+#card1 {
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateX(-100%); 
+}
+
+#card2 {
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(-100%); 
+}
+
+#card3 {
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateX(100%);
+}
+
+#card1.show-left {
+    opacity: 1;
+    transform: translateX(0); 
+}
+
+#card2.show-top {
+    opacity: 1;
+    transform: translateY(0); 
+}
+
+#card3.show-right {
+    opacity: 1;
+    transform: translateX(0); 
+}
+
+.BottoneCard {
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+}
+/* Bordo dei form - Metha - */
+
+.form-control:focus, .form-select:focus, .form-select:valid:focus, .form-select:default:focus {
+    box-shadow: 0 0 10px #198754;
+}
+
+/* hover link benvenuto farmacia - metha - */
+
+.welcome-btn {
+    color: rgba(255, 255, 255, 0.5) !important;
+    transition: color 0.3s ease;
+    border-radius: 10px;
+}
+
+    .welcome-btn:hover {
+        color: rgba(255, 255, 255, 1) !important;
+        transition: color 0.5s ease;
+    }
+
+

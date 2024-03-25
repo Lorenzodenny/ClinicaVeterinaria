@@ -1,0 +1,29 @@
+﻿@model ClinicaVeterinaria.Models.Product
+
+@{
+    ViewBag.Title = "Dettagli Prodotto";
+}
+
+    <h2 class="pb-3" style="color:darkcyan; border-bottom:1px solid; border-color:darkcyan">Dettagli Prodotto</h2>
+
+    <dl class="d-flex mt-3 mb-4">
+        <div class="me-3">
+            <dt>Armadietto</dt>
+            <dd>@Html.DisplayFor(model => model.Drawer.Locker.Descrizione)</dd>
+
+            <dt>Numero Cassetto</dt>
+            <dd>@Html.DisplayFor(model => model.Drawer.DrawerID)</dd>
+        </div>
+        <div class="ms-3">
+            <dt>Nome</dt>
+            <dd>@Html.DisplayFor(model => model.Nome)</dd>
+
+            <dt>Descrizione</dt>
+            <dd>@Html.DisplayFor(model => model.Descrizione)</dd>
+        </div>
+    </dl>
+
+    <p>
+        @Html.ActionLink("Aggiungi al resoconto", "AddToReport", new { id = Model.ProductID }, new { @class = "btn btn-success me-2", style = "background-color: darkcyan;" })
+        @Html.ActionLink("Torna alla lista", "Index", null, new { @class = "btn btn-secondary ms-2" })
+    </p>
